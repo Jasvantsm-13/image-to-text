@@ -2,29 +2,9 @@ document.getElementById("uploadBtn").addEventListener("click", function () {
     document.getElementById("imageUpload").click();
 });
 
-// Drag & Drop and File Upload
-const dropArea = document.getElementById("dropArea");
-const imageUpload = document.getElementById("imageUpload");
-
-dropArea.addEventListener("click", () => imageUpload.click());
-dropArea.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropArea.style.background = "#f3f3f3";
-});
-dropArea.addEventListener("dragleave", () => {
-    dropArea.style.background = "white";
-});
-dropArea.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropArea.style.background = "white";
-    imageUpload.files = e.dataTransfer.files;
-    previewImage();
-});
-
-imageUpload.addEventListener("change", previewImage);
-
-function previewImage() {
-    const file = imageUpload.files[0];
+// Image Upload and Preview
+document.getElementById("imageUpload").addEventListener("change", function (event) {
+    const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -33,7 +13,7 @@ function previewImage() {
         };
         reader.readAsDataURL(file);
     }
-}
+});
 
 document.getElementById("convertBtn").addEventListener("click", function () {
     const image = document.getElementById("preview").src;
