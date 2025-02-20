@@ -9,7 +9,7 @@ This is a simple **Image to Text Converter** web application that extracts text 
 ✅ Free to use and open-source  
 
 ## 🚀 Live Demo
-🔗 [Click here to try it!](https://jasvantsm.github.io/image-to-text/)  
+🔗 [Click here to try it!](https://jasvantsm-13.github.io/image-to-text/)  
 
 ## 📌 How to Use
 1. Upload an image containing text.  
