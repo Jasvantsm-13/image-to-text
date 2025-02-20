@@ -1,37 +1,46 @@
-document.getElementById("imageUpload").addEventListener("change", function(event) {
-    const file = event.target.files[0];
+// Drag & Drop and File Upload
+const dropArea = document.getElementById("dropArea");
+const imageUpload = document.getElementById("imageUpload");
+
+dropArea.addEventListener("click", () => imageUpload.click());
+dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.style.background = "#f3f3f3";
+});
+dropArea.addEventListener("dragleave", () => {
+    dropArea.style.background = "white";
+});
+dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.style.background = "white";
+    imageUpload.files = e.dataTransfer.files;
+    previewImage();
+});
+
+imageUpload.addEventListener("change", previewImage);
+
+function previewImage() {
+    const file = imageUpload.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = function () {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-
-                // Resize for better performance
-                canvas.width = 800;
-                canvas.height = (img.height / img.width) * 800;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                document.getElementById("preview").src = canvas.toDataURL();
-                document.getElementById("preview").style.display = "block";
-            };
+        reader.onload = function (e) {
+            document.getElementById("preview").src = e.target.result;
+            document.getElementById("preview").style.display = "block";
         };
         reader.readAsDataURL(file);
     }
-});
+}
 
-document.getElementById("convertBtn").addEventListener("click", function() {
+// Convert Image to Text
+document.getElementById("convertBtn").addEventListener("click", function () {
     const image = document.getElementById("preview").src;
     if (image && image !== "#") {
         document.getElementById("output").value = "Processing...";
         Tesseract.recognize(
             image,
-            'eng',
+            'eng+hin', // English + Hindi OCR
             {
-                logger: m => console.log(m), // Logs progress
-                tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?(){}[]:;-'
+                logger: m => console.log(m)
             }
         ).then(({ data: { text } }) => {
             document.getElementById("output").value = text.trim();
@@ -45,10 +54,24 @@ document.getElementById("convertBtn").addEventListener("click", function() {
     }
 });
 
-// Copy to clipboard
-document.getElementById("copyBtn").addEventListener("click", function() {
+// Copy to Clipboard
+document.getElementById("copyBtn").addEventListener("click", function () {
     const textArea = document.getElementById("output");
     textArea.select();
     document.execCommand("copy");
     alert("✅ Text copied to clipboard!");
+});
+
+// Download Extracted Text
+document.getElementById("downloadBtn").addEventListener("click", function () {
+    const text = document.getElementById("output").value;
+    if (text.trim() === "") {
+        alert("No text available to download!");
+        return;
+    }
+    const blob = new Blob([text], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "extracted_text.txt";
+    a.click();
 });
