@@ -13,15 +13,15 @@ document.getElementById("imageUpload").addEventListener("change", function(event
 
 document.getElementById("convertBtn").addEventListener("click", function() {
     const image = document.getElementById("preview").src;
-    if (image) {
+    if (image && image !== "#") {
         Tesseract.recognize(
             image,
-            'eng', // Language (English)
+            'eng', // English OCR
             {
-                logger: m => console.log(m)
+                logger: m => console.log(m) // Logs progress
             }
         ).then(({ data: { text } }) => {
-            document.getElementById("output").innerText = text;
+            document.getElementById("output").innerText = text || "No text found!";
         }).catch(error => {
             document.getElementById("output").innerText = "Error processing image!";
             console.error(error);
