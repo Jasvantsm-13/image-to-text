@@ -14,20 +14,6 @@ body {
     border-radius: 10px;
 }
 
-/* Upload Box */
-.upload-box {
-    border: 2px dashed #007bff;
-    padding: 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-
-.upload-box p {
-    color: #007bff;
-    font-weight: bold;
-}
-
 /* Buttons */
 .btn {
     background: linear-gradient(90deg, #ff758c, #ff7eb3);
