@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,36 @@
     <script src="https://unpkg.com/tesseract.js@4.1.1"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
-        <h2>Image to Text Converter</h2>
-        <input type="file" id="imageUpload" accept="image/*">
-        <img id="preview">
-        <button id="convertBtn">Convert to Text</button>
+        <header>
+            <h1>🖼️ Image to Text Converter</h1>
+            <p>Extract text from images quickly and accurately!</p>
+        </header>
+
+        <div class="upload-section">
+            <label for="imageUpload" class="upload-box">
+                <input type="file" id="imageUpload" accept="image/*" hidden>
+                <span>📤 Upload Image</span>
+            </label>
+            <img id="preview" alt="Image Preview">
+        </div>
+
+        <button id="convertBtn" class="btn">🚀 Convert to Text</button>
 
         <div id="output-container">
-            <h3>Extracted Text:</h3>
+            <h2>📝 Extracted Text:</h2>
             <textarea id="output" readonly></textarea>
-            <button id="copyBtn">Copy Text</button>
+            <button id="copyBtn" class="btn copy-btn">📋 Copy Text</button>
         </div>
     </div>
 
+    <footer>
+        <p>Built with ❤️ using Tesseract.js</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
+
 </html>
