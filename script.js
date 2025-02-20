@@ -9,9 +9,9 @@ document.getElementById("imageUpload").addEventListener("change", function(event
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext("2d");
 
-                // Resize image for better OCR performance
-                canvas.width = 600;
-                canvas.height = (img.height / img.width) * 600;
+                // Resize for better performance
+                canvas.width = 800;
+                canvas.height = (img.height / img.width) * 800;
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
                 document.getElementById("preview").src = canvas.toDataURL();
@@ -45,10 +45,10 @@ document.getElementById("convertBtn").addEventListener("click", function() {
     }
 });
 
-// Copy to clipboard function
+// Copy to clipboard
 document.getElementById("copyBtn").addEventListener("click", function() {
     const textArea = document.getElementById("output");
     textArea.select();
     document.execCommand("copy");
-    alert("Text copied to clipboard!");
+    alert("✅ Text copied to clipboard!");
 });
