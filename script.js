@@ -3,9 +3,20 @@ document.getElementById("imageUpload").addEventListener("change", function(event
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const img = document.getElementById("preview");
+            const img = new Image();
             img.src = e.target.result;
-            img.style.display = "block";
+            img.onload = function () {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                // Resize image for better OCR performance
+                canvas.width = 600;
+                canvas.height = (img.height / img.width) * 600;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                document.getElementById("preview").src = canvas.toDataURL();
+                document.getElementById("preview").style.display = "block";
+            };
         };
         reader.readAsDataURL(file);
     }
@@ -14,19 +25,30 @@ document.getElementById("imageUpload").addEventListener("change", function(event
 document.getElementById("convertBtn").addEventListener("click", function() {
     const image = document.getElementById("preview").src;
     if (image && image !== "#") {
+        document.getElementById("output").value = "Processing...";
         Tesseract.recognize(
             image,
-            'eng', // English OCR
+            'eng',
             {
-                logger: m => console.log(m) // Logs progress
+                logger: m => console.log(m), // Logs progress
+                tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?(){}[]:;-'
             }
         ).then(({ data: { text } }) => {
-            document.getElementById("output").innerText = text || "No text found!";
+            document.getElementById("output").value = text.trim();
+            document.getElementById("output-container").style.display = "block";
         }).catch(error => {
-            document.getElementById("output").innerText = "Error processing image!";
+            document.getElementById("output").value = "Error processing image!";
             console.error(error);
         });
     } else {
         alert("Please upload an image first.");
     }
+});
+
+// Copy to clipboard function
+document.getElementById("copyBtn").addEventListener("click", function() {
+    const textArea = document.getElementById("output");
+    textArea.select();
+    document.execCommand("copy");
+    alert("Text copied to clipboard!");
 });
