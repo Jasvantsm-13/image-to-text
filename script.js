@@ -1,3 +1,7 @@
+document.getElementById("uploadBtn").addEventListener("click", function () {
+    document.getElementById("imageUpload").click();
+});
+
 // Drag & Drop and File Upload
 const dropArea = document.getElementById("dropArea");
 const imageUpload = document.getElementById("imageUpload");
@@ -31,47 +35,39 @@ function previewImage() {
     }
 }
 
-// Convert Image to Text
 document.getElementById("convertBtn").addEventListener("click", function () {
     const image = document.getElementById("preview").src;
-    if (image && image !== "#") {
-        document.getElementById("output").value = "Processing...";
-        Tesseract.recognize(
-            image,
-            'eng+hin', // English + Hindi OCR
-            {
-                logger: m => console.log(m)
-            }
-        ).then(({ data: { text } }) => {
-            document.getElementById("output").value = text.trim();
-            document.getElementById("output-container").style.display = "block";
-        }).catch(error => {
-            document.getElementById("output").value = "Error processing image!";
-            console.error(error);
-        });
+    if (image) {
+        Tesseract.recognize(image, 'eng', { logger: m => console.log(m) })
+            .then(({ data: { text } }) => {
+                document.getElementById("output").value = text;
+                document.getElementById("output-container").style.display = "block";
+            })
+            .catch(error => {
+                document.getElementById("output").value = "Error processing image!";
+                console.error(error);
+            });
     } else {
         alert("Please upload an image first.");
     }
 });
 
-// Copy to Clipboard
+// Copy Text Button
 document.getElementById("copyBtn").addEventListener("click", function () {
-    const textArea = document.getElementById("output");
-    textArea.select();
+    const outputText = document.getElementById("output");
+    outputText.select();
     document.execCommand("copy");
-    alert("✅ Text copied to clipboard!");
+    alert("Text copied to clipboard!");
 });
 
-// Download Extracted Text
+// Download Text Button
 document.getElementById("downloadBtn").addEventListener("click", function () {
     const text = document.getElementById("output").value;
-    if (text.trim() === "") {
-        alert("No text available to download!");
-        return;
+    if (text) {
+        const blob = new Blob([text], { type: "text/plain" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "extracted_text.txt";
+        a.click();
     }
-    const blob = new Blob([text], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "extracted_text.txt";
-    a.click();
 });
